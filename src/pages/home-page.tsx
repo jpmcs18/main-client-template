@@ -11,13 +11,9 @@ import UserPage from './user-page';
 import { useMemo, useState } from 'react';
 import { ICON } from '../constant';
 import { Routes } from '../routes';
-import ConcernPage from './concern-page';
 import ManageProfile from './modals/manage-profile';
-import RolePage from './role-page';
-import TicketPage from './ticket-page';
-import ClassificationPage from './classification-page';
 import PersonnelPage from './personnel-page';
-import OfficePage from './office-page';
+import RolePage from './role-page';
 
 export default function HomePage() {
   const [showProfile, setShowProfile] = useState(false);
@@ -32,19 +28,10 @@ export default function HomePage() {
     () => [
       ...(profile?.admin
         ? [
-            {
-              head: 'Transactions',
-              navs: [
-                {
-                  route: Routes.Concern,
-                  name: 'Concerns',
-                },
-                {
-                  route: Routes.Ticket,
-                  name: 'Tickets',
-                },
-              ],
-            },
+            // {
+            //   head: 'Transactions',
+            //   navs: [],
+            // },
             {
               head: 'Managements',
               navs: [
@@ -55,14 +42,6 @@ export default function HomePage() {
                 {
                   route: Routes.Role,
                   name: 'Roles',
-                },
-                {
-                  route: Routes.Classification,
-                  name: 'Classification',
-                },
-                {
-                  route: Routes.Office,
-                  name: 'Office',
                 },
               ],
             },
@@ -167,7 +146,7 @@ export default function HomePage() {
                     <label
                       className='user-name nav-menu'
                       onClick={() => setShowProfile(true)}>
-                      {`${profile?.personnel?.name} (${profile?.personnel?.classification?.description})`}
+                      {`${profile?.personnel?.name}`}
                     </label>
                   </li>
                   <li>
@@ -193,38 +172,10 @@ export default function HomePage() {
               <Route path={Routes.Role} exact component={RolePage} />
             )}
             {(profile?.distinctModules?.filter(
-              (x) => x.route === Routes.Concern
-            )?.[0]?.id ||
-              profile?.admin) && (
-              <Route path={Routes.Concern} exact component={ConcernPage} />
-            )}
-            {(profile?.distinctModules?.filter(
-              (x) => x.route === Routes.Ticket
-            )?.[0]?.id ||
-              profile?.admin) && (
-              <Route path={Routes.Ticket} exact component={TicketPage} />
-            )}
-            {(profile?.distinctModules?.filter(
-              (x) => x.route === Routes.Classification
-            )?.[0]?.id ||
-              profile?.admin) && (
-              <Route
-                path={Routes.Classification}
-                exact
-                component={ClassificationPage}
-              />
-            )}
-            {(profile?.distinctModules?.filter(
               (x) => x.route === Routes.Personnel
             )?.[0]?.id ||
               profile?.admin) && (
               <Route path={Routes.Personnel} exact component={PersonnelPage} />
-            )}
-            {(profile?.distinctModules?.filter(
-              (x) => x.route === Routes.Office
-            )?.[0]?.id ||
-              profile?.admin) && (
-              <Route path={Routes.Office} exact component={OfficePage} />
             )}
           </Switch>
           <div>

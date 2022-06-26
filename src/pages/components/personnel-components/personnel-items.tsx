@@ -10,7 +10,6 @@ export default function PersonnelItems() {
       <thead>
         <tr>
           <th>Name</th>
-          <th>Classification</th>
         </tr>
         <tr>
           <th colSpan={10}>

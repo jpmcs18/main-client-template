@@ -24,30 +24,6 @@ export const RoleEnd = {
   Update: 'roles',
 };
 
-export const ConcernEnd = {
-  Search: 'concerns/search',
-  Create: 'concerns',
-  Update: 'concerns',
-  Delete: 'concerns',
-  Assign: 'concerns/assign',
-};
-
-export const ClassificationEnd = {
-  GetList: 'classifications',
-  Get: 'classifications',
-  Search: 'classifications/search',
-  Add: 'classifications',
-  Update: 'classifications',
-};
-
-export const OfficeEnd = {
-  GetList: 'offices',
-  Get: 'offices',
-  Search: 'offices/search',
-  Add: 'offices',
-  Update: 'offices',
-};
-
 export const PersonnelEnd = {
   GetList: 'personnels',
   GetListByClassification: 'personnels/classification',
@@ -56,11 +32,4 @@ export const PersonnelEnd = {
   Search: 'personnels/search',
   Add: 'personnels',
   Update: 'personnels',
-};
-
-export const PersonnelConcernEnd = {
-  GetList: 'personnel-concerns',
-  GetActions: 'personnel-concerns/actions',
-  Resolve: 'personnel-concerns/resolve',
-  Forward: 'personnel-concerns/forward',
 };

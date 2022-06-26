@@ -7,7 +7,6 @@ export default function PersonnelItem({ personnel }: { personnel: Personnel }) {
   return (
     <tr>
       <td>{personnel.name}</td>
-      <td>{personnel.classification?.description}</td>
       <td className='table-actions'>
         <button
           className='btn'
