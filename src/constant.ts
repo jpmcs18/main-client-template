@@ -4,7 +4,7 @@ export const API =
     : window.location.protocol === 'http:'
     ? process.env.REACT_APP_PROD
     : process.env.REACT_APP_SECURED_PROD;
-export const ICON = 'TICKETING SYSTEM';
+export const ICON = 'TEMPLATE SYSTEM';
 export const APP_SECRET = process.env.REACT_APP_SECRET_KEY;
 export const ConcernStatus = {
   Open: 1,

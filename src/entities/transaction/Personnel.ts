@@ -1,4 +1,7 @@
 export interface Personnel {
   id: number;
-  name: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  fullName?: string;
 }

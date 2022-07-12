@@ -23,9 +23,9 @@ export default function ManagePersonnel({
     () =>
       selectedPersonnel ?? {
         id: 0,
-        classification: undefined,
-        classificationId: undefined,
-        name: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
       }
   );
   const setBusy = useSetBusy();
@@ -77,9 +77,21 @@ export default function ManagePersonnel({
       }>
       <div className='concern-management-modal-body modal-content-body concern-management'>
         <CustomTextBox
-          title='Name'
-          name='name'
-          value={personnel.name}
+          title='First Name'
+          name='firstName'
+          value={personnel.firstName}
+          onChange={onChange}
+        />
+        <CustomTextBox
+          title='Middle Name'
+          name='middleName'
+          value={personnel.middleName}
+          onChange={onChange}
+        />
+        <CustomTextBox
+          title='Last Name'
+          name='lastName'
+          value={personnel.lastName}
           onChange={onChange}
         />
       </div>

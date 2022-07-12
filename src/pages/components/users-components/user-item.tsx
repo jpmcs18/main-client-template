@@ -19,7 +19,7 @@ export default function UserItem({
 }) {
   return (
     <tr>
-      <td>{user.personnel?.name}</td>
+      <td>{user.personnel?.fullName}</td>
       <td>{user.username}</td>
       <td className='elipsis'>
         {user.admin ? 'Admin' : 'User'}

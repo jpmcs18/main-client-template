@@ -112,7 +112,7 @@ export default function ManageUser({
             ...res.map((x) => {
               return {
                 key: x.id.toString(),
-                value: x.name,
+                value: x.fullName ?? '',
               };
             }),
           ]);
@@ -212,7 +212,7 @@ export default function ManageUser({
           <CustomDropdown
             title='Personnel'
             name='personnel'
-            value={user?.personnel?.name}
+            value={user?.personnel?.fullName}
             onChange={onChange}
             itemsList={personnelItem}
           />
@@ -241,7 +241,6 @@ export default function ManageUser({
           <CustomDropdown
             title='Role'
             name='role'
-            value={user?.personnel?.name}
             onChange={onChange}
             itemsList={roleItems}
           />

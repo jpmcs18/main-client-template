@@ -9,11 +9,11 @@ import LoginPage from './login-page';
 import UserPage from './user-page';
 
 import { useMemo, useState } from 'react';
-import { ICON } from '../constant';
 import { Routes } from '../routes';
 import ManageProfile from './modals/manage-profile';
 import PersonnelPage from './personnel-page';
 import RolePage from './role-page';
+import Icon from './components/icon';
 
 export default function HomePage() {
   const [showProfile, setShowProfile] = useState(false);
@@ -90,7 +90,7 @@ export default function HomePage() {
           <header className='navbar'>
             <div className='menu-container'>
               <NavLink to={Routes.Home} className='icon'>
-                {ICON}
+                <Icon />
               </NavLink>
               <nav>
                 <div>
@@ -146,7 +146,7 @@ export default function HomePage() {
                     <label
                       className='user-name nav-menu'
                       onClick={() => setShowProfile(true)}>
-                      {`${profile?.personnel?.name}`}
+                      {`${profile?.personnel?.fullName}`}
                     </label>
                   </li>
                   <li>

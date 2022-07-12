@@ -1,10 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap");
 :root {
-  --primary-color: #a00404;
-  --primary-color2: #ce3838;
+  --primary-color: #720303;
+  --primary-color-accent: white;
+  --primary-color2: #a70c0c;
   --primary-color-menu-hover: #a00404;
   --primary-color-selected: #a00404;
-  --primary-color-hover: #f80303;
+  --primary-color-hover: #9b0000;
+  --primary-color-hover-accent: white;
   --primary-color-menu-inactive: #ddd;
   --secondary-color: rgb(155, 141, 141);
   --secondary-color-accent: white;
@@ -237,12 +239,20 @@ textarea {
   padding: 1em 2em;
   -webkit-box-shadow: 0em 0.1em 0.2em 0em #ccc;
           box-shadow: 0em 0.1em 0.2em 0em #ccc;
+  background-color: var(--primary-color);
+  color: var(--primary-color-accent);
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .login-container .login-header h1 {
   font-size: 1.5em;
   letter-spacing: 1.5px;
-  color: var(--primary-color);
 }
 
 .login-container .login-content {
@@ -258,6 +268,7 @@ textarea {
 .btn {
   font-size: var(--normal-font-size);
   border-radius: 0.3em;
+  font-weight: var(--demibold);
   margin-top: 0.5em;
   padding: 0.7em 2em;
   min-width: 5em;
@@ -392,6 +403,7 @@ textarea {
 
 .custom-input .checkbox:hover {
   background: var(--primary-color-hover);
+  color: var(--primary-color-hover-accent);
 }
 
 .custom-input .checked {

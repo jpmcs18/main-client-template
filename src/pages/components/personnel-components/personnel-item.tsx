@@ -6,7 +6,9 @@ export default function PersonnelItem({ personnel }: { personnel: Personnel }) {
   const action = useContext(PersonnelActions);
   return (
     <tr>
-      <td>{personnel.name}</td>
+      <td>{personnel.firstName}</td>
+      <td>{personnel.middleName}</td>
+      <td>{personnel.lastName}</td>
       <td className='table-actions'>
         <button
           className='btn'

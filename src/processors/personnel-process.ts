@@ -1,7 +1,7 @@
 import { PersonnelEnd } from '../endpoints';
 import { SearchResult } from '../entities/SearchResult';
 import { Personnel } from '../entities/transaction/Personnel';
-import { httpGet, httpPost, httpPut } from './base';
+import { httpDelete, httpGet, httpPost, httpPut } from './base';
 
 export async function getPersonnels(): Promise<Personnel[] | undefined> {
   return httpGet<Personnel[]>(PersonnelEnd.GetList);
@@ -42,4 +42,7 @@ export async function createPersonnel(
 }
 export async function updatePersonnel(personnel: Personnel): Promise<boolean> {
   return httpPut(`${PersonnelEnd.Update}/${personnel.id}`, personnel);
+}
+export async function deletePersonnel(id: number): Promise<boolean> {
+  return httpDelete(`${PersonnelEnd.Update}/${id}`);
 }

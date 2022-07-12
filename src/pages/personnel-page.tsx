@@ -1,7 +1,10 @@
 import { createContext, useEffect, useState } from 'react';
 import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
 import { Personnel } from '../entities/transaction/Personnel';
-import { searchPersonnels } from '../processors/personnel-process';
+import {
+  deletePersonnel,
+  searchPersonnels,
+} from '../processors/personnel-process';
 import Pagination from './components/pagination';
 import PersonnelItems from './components/personnel-components/personnel-items';
 import SeachBar from './components/seachbar';
@@ -46,10 +49,29 @@ export default function OfficePage() {
         setShowModal(true);
         setSelectedPersonnel(action.payload);
         break;
+      case 'Delete':
+        setMessage({
+          message: 'Do you want to delete this personnel?',
+          action: 'YESNO',
+          onOk: () => {
+            removePersonnel(action.payload);
+          },
+        });
+        break;
     }
   }
-
-  function searchPersonnel({
+  async function removePersonnel(id: number) {
+    setBusy(true);
+    await deletePersonnel(id)
+      .then(() => {
+        setMessage({ message: 'Deleted.' });
+      })
+      .catch((err) => {
+        setMessage({ message: err.message });
+      })
+      .finally(() => setBusy(false));
+  }
+  async function searchPersonnel({
     searchKey,
     page,
   }: {
@@ -57,7 +79,7 @@ export default function OfficePage() {
     page?: number | undefined;
   }) {
     setBusy(true);
-    searchPersonnels(searchKey ?? key, page ?? currentPage)
+    await searchPersonnels(searchKey ?? key, page ?? currentPage)
       .then((res) => {
         if (res !== undefined) {
           setPersonnels(res.results);

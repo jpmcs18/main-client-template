@@ -9,7 +9,9 @@ export default function PersonnelItems() {
     <table className='item-table'>
       <thead>
         <tr>
-          <th>Name</th>
+          <th>First Name</th>
+          <th>Middle Name</th>
+          <th>Last Name</th>
         </tr>
         <tr>
           <th colSpan={10}>

@@ -19,6 +19,9 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
     return {
       username: profile?.username ?? '',
       personnel: profile?.personnel,
+      password: '',
+      confirmNewPassword: '',
+      newPassword: '',
     };
   });
 
@@ -50,6 +53,7 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
               ...profile,
               username: user.username,
             });
+            onClose();
           },
         });
       })
@@ -71,7 +75,7 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
           <CustomTextBox
             title='Name'
             readonly={true}
-            value={user?.personnel?.name}
+            value={user?.personnel?.fullName}
           />
           <CustomTextBox
             title='Username'
