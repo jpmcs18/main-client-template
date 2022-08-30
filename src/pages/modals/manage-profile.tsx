@@ -6,8 +6,13 @@ import {
   useUserProfile,
 } from '../../custom-hooks/authorize-provider';
 import { UpdateUserProfile } from '../../entities/user/UpdateUserProfile';
-import { saveProfile } from '../../processors/session-manager';
+import {
+  getTheme,
+  saveProfile,
+  setTheme,
+} from '../../processors/session-manager';
 import { updateProfile } from '../../processors/user-process';
+import CustomCheckBoxButton from '../components/custom-check-box-button';
 import CustomTextBox from '../components/custom-textbox';
 import { CustomReturn } from '../components/CustomReturn';
 import Modal from './modal';
@@ -15,6 +20,7 @@ import Modal from './modal';
 export default function ManageProfile({ onClose }: { onClose: () => void }) {
   const profile = useUserProfile();
   const updateProfileInfo = useUpdateUserProfile();
+  const [darkMode, setdarkMode] = useState(() => !!getTheme());
   const [user, setUser] = useState<UpdateUserProfile>(() => {
     return {
       username: profile?.username ?? '',
@@ -71,6 +77,22 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
   return (
     <Modal className='profile-modal' onClose={onClose} title='Users Profile'>
       <div className='modal-content-body'>
+        <div>
+          <CustomCheckBoxButton
+            isCheck={darkMode}
+            CheckedTitle='Dark Mode'
+            UncheckedTitle='Light Mode'
+            onChange={(e) => {
+              setdarkMode(() => !!e.value);
+              setTheme(!!e.value);
+              if (!!e.value) {
+                document.body.classList.add('dark-mode');
+              } else {
+                document.body.classList.remove('dark-mode');
+              }
+            }}
+          />
+        </div>
         <div>
           <CustomTextBox
             title='Name'

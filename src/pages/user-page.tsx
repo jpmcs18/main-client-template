@@ -1,5 +1,14 @@
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import {
+  useSetBusy,
+  useSetMessage,
+  useSetToasterMessage,
+} from '../custom-hooks/authorize-provider';
 import { User } from '../entities/user/User';
 import {
   activateUsers,
@@ -7,10 +16,12 @@ import {
   resetUserPassword,
   searchUsers,
 } from '../processors/user-process';
+import { RootState } from '../state/store';
 import Pagination from './components/pagination';
 import SeachBar from './components/seachbar';
 import UserItem from './components/users-components/user-item';
 import ManageUser from './modals/manage-user';
+import { userActions } from '../state/reducers/userReducer';
 
 export type USERACTIONS =
   | { type: 'Activate'; id: number; active: boolean }
@@ -19,12 +30,14 @@ export type USERACTIONS =
   | { type: 'Delete'; id: number };
 
 export default function UserPage() {
+  const dispatch = useDispatch();
   const [name, setName] = useState<string | undefined>();
-  const [users, setUsers] = useState<User[]>([]);
+  const users = useSelector((state: RootState) => state.user.users);
   const [pageCount, setPageCount] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
+  const setToasterMessage = useSetToasterMessage();
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | undefined>();
 
@@ -58,53 +71,45 @@ export default function UserPage() {
         });
         break;
       default:
-        setMessage({ message: 'Invalid Action' });
+        setToasterMessage({ content: 'Invalid Action' });
         break;
     }
   }
 
   async function deleteSelectedUser(userid: number) {
-    setMessage({
-      message: 'Delete this user',
-      onOk: async () => {
-        setBusy(true);
-        await deleteUser(userid)
-          .then(() => {
-            setMessage({
-              message: 'User Deleted',
-              onOk: () => {
-                searchUser(name, currentPage);
-              },
-            });
-          })
-          .catch((err) => {
-            setMessage({ message: err.message });
-          })
-          .finally(() => setBusy(false));
-      },
-    });
+    setBusy(true);
+    await deleteUser(userid)
+      .then(() => {
+        setToasterMessage({
+          content: 'User Deleted',
+        });
+        searchUser(name, currentPage);
+      })
+      .catch((err) => {
+        setToasterMessage({
+          content: err.message,
+        });
+      })
+      .finally(() => setBusy(false));
   }
 
   function activateUser(id: number, active: boolean) {
     setMessage({
-      message: 'Active this user?',
+      message: `${active ? 'Activate' : 'Deactivate'} this user?`,
+      action: 'YESNO',
       onOk: async () => {
         setBusy(true);
         await activateUsers(id)
           .then((res) => {
-            setUsers((users) =>
-              users.map((user) => {
-                if (user.id === id && active !== null) {
-                  user.active = !active;
-                }
-                return user;
-              })
-            );
-
-            setMessage({ message: active ? 'Deactivated' : 'Activated' });
+            dispatch(userActions.activate({ id, active }));
+            setToasterMessage({
+              content: active ? 'Activated' : 'Deactivated',
+            });
           })
           .catch((err) => {
-            setMessage({ message: err.message });
+            setToasterMessage({
+              content: err.message,
+            });
           })
           .finally(() => setBusy(false));
       },
@@ -114,14 +119,19 @@ export default function UserPage() {
   function resetPassword(id: number) {
     setMessage({
       message: 'Reset Password?',
+      action: 'YESNO',
       onOk: async () => {
         setBusy(true);
         await resetUserPassword(id)
           .then(() => {
-            setMessage({ message: 'Password reset to default password' });
+            setToasterMessage({
+              content: 'Password reset to default password',
+            });
           })
           .catch((err) => {
-            setMessage({ message: err.message });
+            setToasterMessage({
+              content: err.message,
+            });
           })
           .finally(() => setBusy(false));
       },
@@ -133,7 +143,7 @@ export default function UserPage() {
     searchUsers(name, page)
       .then((res) => {
         if (res !== undefined) {
-          setUsers(res.results);
+          dispatch(userActions.fill(res.results));
           setPageCount(res.pageCount);
           setCurrentPage(page);
         }
@@ -165,43 +175,43 @@ export default function UserPage() {
   }
 
   return (
-    <div className='main-container'>
-      <div className='item-container'>
+    <>
+      <section>
         <SeachBar search={search} />
-        <div>
-          <Pagination
-            pages={pageCount}
-            currentPageNumber={currentPage}
-            goInPage={goToPage}></Pagination>
-        </div>
-        <div className='content'>
-          <table className='users-content item-table'>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Status</th>
-              </tr>
-              <tr>
-                <th colSpan={6}>
-                  <button className='btn' onClick={addUser}>
-                    Add New User
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <UserItem key={user.id} user={user} action={userAction} />
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div>
+      </section>
+      <section>
+        <Pagination
+          pages={pageCount}
+          currentPageNumber={currentPage}
+          goInPage={goToPage}
+        />
+      </section>
+      <section className='table-container'>
+        <table className='users-content item-table'>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>
+                <span>Action</span>
+                <button className='btn' onClick={addUser}>
+                  <FontAwesomeIcon icon={faPlus as IconProp} />
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <UserItem key={user.id} user={user} action={userAction} />
+            ))}
+          </tbody>
+        </table>
+      </section>
+      <>
         {showModal && <ManageUser onClose={onClose} usersInfo={selectedUser} />}
-      </div>
-    </div>
+      </>
+    </>
   );
 }

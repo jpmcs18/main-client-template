@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   useSetBusy,
-  useSetMessage,
+  useSetToasterMessage,
   useUpdateAuthorize,
   useUpdateUserProfile,
 } from '../custom-hooks/authorize-provider';
@@ -17,9 +17,9 @@ export default function LoginPage() {
     username: '',
     password: '',
   });
-  const setMessage = useSetMessage();
   const updateProfile = useUpdateUserProfile();
   const updateAuthorize = useUpdateAuthorize();
+  const setToasterMessage = useSetToasterMessage();
   const setBusy = useSetBusy();
   async function signIn() {
     setBusy(true);
@@ -31,7 +31,7 @@ export default function LoginPage() {
         }
       })
       .catch((err) => {
-        setMessage({ message: err.message });
+        setToasterMessage({ content: err.message });
       })
       .finally(() => setBusy(false));
   }
@@ -46,7 +46,7 @@ export default function LoginPage() {
         }
       })
       .catch((err) => {
-        setMessage({ message: err.message });
+        setToasterMessage({ content: err.message });
       })
       .finally(() => setBusy(false));
   }
@@ -68,32 +68,35 @@ export default function LoginPage() {
     }
   }
   return (
-    <div className='login-container'>
-      <div className='login-header'>
-        <h1>Authentication</h1>
+    <section>
+      <div className='login-container'>
+        <div className='login-header'>
+          <label className='login-title'>Login</label>
+        </div>
+        <div className='login-content'>
+          <CustomTextBox
+            title='Username'
+            name='username'
+            id='username'
+            className='username'
+            onChange={onTextChange}
+            onKeyPress={onKeyPress}
+          />
+          <CustomTextBox
+            title='Password'
+            name='password'
+            id='password'
+            type='password'
+            className='password'
+            onChange={onTextChange}
+            onKeyPress={onKeyPress}
+          />
+          <button onClick={signIn} className='btn'>
+            Login
+          </button>
+          <label className='forgot-password'>Forgot Password</label>
+        </div>
       </div>
-      <div className='login-content'>
-        <CustomTextBox
-          title='Username'
-          name='username'
-          id='username'
-          className='username'
-          onChange={onTextChange}
-          onKeyPress={onKeyPress}
-        />
-        <CustomTextBox
-          title='Password'
-          name='password'
-          id='password'
-          type='password'
-          className='password'
-          onChange={onTextChange}
-          onKeyPress={onKeyPress}
-        />
-        <button onClick={signIn} className='btn'>
-          Login
-        </button>
-      </div>
-    </div>
+    </section>
   );
 }

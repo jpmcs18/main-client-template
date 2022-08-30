@@ -1,12 +1,23 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
-  faPen,
+  faAsterisk,
+  faEdit,
+  faKey,
+  faPowerOff,
+  faRecycle,
+  faRedo,
+  faRedoAlt,
   faTrash,
+  faUndo,
+  faUndoAlt,
+  faUserAltSlash,
+  faUserCheck,
   faUserLock,
+  faUserSecret,
   faUserShield,
+  faUserSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
 import { User } from '../../../entities/user/User';
 import { USERACTIONS } from '../../user-page';
 
@@ -27,39 +38,48 @@ export default function UserItem({
         {user.userRoles?.map((x) => x.role.description).join(' | ')}
       </td>
       <td>{user.active ? 'Active' : 'Inactive'}</td>
-      <td className='table-actions'>
-        <FontAwesomeIcon
-          className='action-icon table-icon-button'
-          icon={faUserLock as IconProp}
-          onClick={() => {
-            action({ type: 'Activate', id: user.id, active: user.active });
-          }}
-          title='Activate/Deactivate User'
-        />
-        <FontAwesomeIcon
-          icon={faUserShield as IconProp}
-          className='action-icon table-icon-button'
-          onClick={() => {
-            action({ type: 'ResetPassword', id: user.id });
-          }}
-          title='Reset Users Password'
-        />
-        <FontAwesomeIcon
-          icon={faPen as IconProp}
-          className='action-icon table-icon-button'
-          onClick={() => {
-            action({ type: 'Edit', user: user });
-          }}
-          title='Edit User'
-        />
-        <FontAwesomeIcon
-          icon={faTrash as IconProp}
-          className='action-icon table-icon-button'
-          onClick={() => {
-            action({ type: 'Delete', id: user.id });
-          }}
-          title='Delete User'
-        />
+      <td>
+        <div className='table-actions'>
+          {user.active && (
+            <button
+              className='table-btn'
+              title='Deactivate'
+              onClick={() =>
+                action({ type: 'Activate', id: user.id, active: !user.active })
+              }>
+              <FontAwesomeIcon icon={faUserSlash as IconProp} />
+            </button>
+          )}
+          {!user.active && (
+            <button
+              className='table-btn'
+              title='Activate'
+              onClick={() =>
+                action({ type: 'Activate', id: user.id, active: !user.active })
+              }>
+              <FontAwesomeIcon icon={faUserCheck as IconProp} />
+            </button>
+          )}
+          <button
+            className='table-btn reset-password'
+            title='Reset Password'
+            onClick={() => action({ type: 'ResetPassword', id: user.id })}>
+            <FontAwesomeIcon icon={faKey as IconProp} className='outer' />
+            <FontAwesomeIcon icon={faUndoAlt as IconProp} className='inner' />
+          </button>
+          <button
+            className='table-btn'
+            title='Edit'
+            onClick={() => action({ type: 'Edit', user: user })}>
+            <FontAwesomeIcon icon={faEdit as IconProp} />
+          </button>
+          <button
+            className='table-btn'
+            title='Delete'
+            onClick={() => action({ type: 'Delete', id: user.id })}>
+            <FontAwesomeIcon icon={faTrash as IconProp} />
+          </button>
+        </div>
       </td>
     </tr>
   );

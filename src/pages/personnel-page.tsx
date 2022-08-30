@@ -1,27 +1,28 @@
 import { createContext, useEffect, useState } from 'react';
-import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
-import { Personnel } from '../entities/transaction/Personnel';
+import { useDispatch } from 'react-redux';
 import {
-  deletePersonnel,
-  searchPersonnels,
-} from '../processors/personnel-process';
+  useSetBusy,
+  useSetMessage,
+  useSetToasterMessage,
+} from '../custom-hooks/authorize-provider';
+import { Personnel } from '../entities/transaction/Personnel';
+import { searchPersonnels } from '../processors/personnel-process';
+import { personnelActions } from '../state/reducers/personnelReducer';
 import Pagination from './components/pagination';
 import PersonnelItems from './components/personnel-components/personnel-items';
 import SeachBar from './components/seachbar';
 import ManagePersonnel from './modals/manage-personnel';
-
 type ACTIONS =
   | { action: 'Add' }
   | { action: 'Edit'; payload: Personnel }
   | { action: 'Delete'; payload: number };
-export const PersonnelList = createContext<Personnel[]>([]);
 export const PersonnelActions = createContext<(action: ACTIONS) => void>(
   () => {}
 );
 
-export default function OfficePage() {
+export default function PersonnelPage() {
+  const dispatch = useDispatch();
   const [key, setKey] = useState<string | undefined>();
-  const [personnels, setPersonnels] = useState<Personnel[]>([]);
   const [pageCount, setPageCount] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const setBusy = useSetBusy();
@@ -30,6 +31,7 @@ export default function OfficePage() {
   const [selectedPersonnel, setSelectedPersonnel] = useState<
     Personnel | undefined
   >();
+  const setToasterMessage = useSetToasterMessage();
 
   useEffect(
     () => {
@@ -49,29 +51,10 @@ export default function OfficePage() {
         setShowModal(true);
         setSelectedPersonnel(action.payload);
         break;
-      case 'Delete':
-        setMessage({
-          message: 'Do you want to delete this personnel?',
-          action: 'YESNO',
-          onOk: () => {
-            removePersonnel(action.payload);
-          },
-        });
-        break;
     }
   }
-  async function removePersonnel(id: number) {
-    setBusy(true);
-    await deletePersonnel(id)
-      .then(() => {
-        setMessage({ message: 'Deleted.' });
-      })
-      .catch((err) => {
-        setMessage({ message: err.message });
-      })
-      .finally(() => setBusy(false));
-  }
-  async function searchPersonnel({
+
+  function searchPersonnel({
     searchKey,
     page,
   }: {
@@ -79,16 +62,16 @@ export default function OfficePage() {
     page?: number | undefined;
   }) {
     setBusy(true);
-    await searchPersonnels(searchKey ?? key, page ?? currentPage)
+    searchPersonnels(searchKey ?? key, page ?? currentPage)
       .then((res) => {
         if (res !== undefined) {
-          setPersonnels(res.results);
+          dispatch(personnelActions.fill(res.results));
           setPageCount(res.pageCount);
           if (page !== undefined) setCurrentPage(page);
         }
       })
       .catch((err) => {
-        setMessage({ message: err.message });
+        setToasterMessage({ content: err.message });
       })
       .finally(() => setBusy(false));
   }
@@ -110,29 +93,29 @@ export default function OfficePage() {
   }
 
   return (
-    <div className='main-container'>
-      <div className='item-container'>
+    <>
+      <section>
         <SeachBar search={search} />
-        <div>
-          <Pagination
-            pages={pageCount}
-            currentPageNumber={currentPage}
-            goInPage={goToPage}></Pagination>
-        </div>
-        <PersonnelList.Provider value={personnels}>
-          <PersonnelActions.Provider value={personnelAction}>
-            <PersonnelItems />
-          </PersonnelActions.Provider>
-        </PersonnelList.Provider>
-      </div>
-      <div>
+      </section>
+      <section>
+        <Pagination
+          pages={pageCount}
+          currentPageNumber={currentPage}
+          goInPage={goToPage}></Pagination>
+      </section>
+      <section className='table-container'>
+        <PersonnelActions.Provider value={personnelAction}>
+          <PersonnelItems />
+        </PersonnelActions.Provider>
+      </section>
+      <>
         {showModal && (
           <ManagePersonnel
             onClose={onClose}
             selectedPersonnel={selectedPersonnel}
           />
         )}
-      </div>
-    </div>
+      </>
+    </>
   );
 }

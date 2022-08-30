@@ -1,3 +1,6 @@
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext } from 'react';
 import { RoleActions, RoleList } from '../../role-page';
 import RoleItem from './role-item';
@@ -10,15 +13,14 @@ export default function RoleItems() {
       <thead>
         <tr>
           <th>Description</th>
-        </tr>
-        <tr>
-          <th colSpan={10}>
+          <th>
+            <span>Action</span>
             <button
               className='btn'
               onClick={() => {
                 action({ action: 'Add' });
               }}>
-              Add New Role
+              <FontAwesomeIcon icon={faPlus as IconProp} />
             </button>
           </th>
         </tr>

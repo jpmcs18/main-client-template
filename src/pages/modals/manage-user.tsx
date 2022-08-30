@@ -225,13 +225,15 @@ export default function ManageUser({
         </div>
         <div>
           <CustomCheckBoxButton
-            title='Is Admin'
+            CheckedTitle='Admin'
+            UncheckedTitle='User'
             name='admin'
             isCheck={user?.admin ?? false}
             onChange={onChange}
           />
           <CustomCheckBoxButton
-            title='Is Active'
+            CheckedTitle='Active'
+            UncheckedTitle='Inactive'
             name='active'
             isCheck={user?.active ?? false}
             onChange={onChange}
@@ -250,41 +252,44 @@ export default function ManageUser({
             <thead>
               <tr>
                 <th>User Roles</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {userRoles?.map((role) => (
                 <tr key={role.roleId} className={role.deleted ? 'deleted' : ''}>
                   <td>{role.role?.description}</td>
-                  <td className='table-actions'>
-                    {role.deleted && (
-                      <FontAwesomeIcon
-                        icon={faUndo as IconProp}
-                        className='action-icon table-icon-button'
+                  <td>
+                    <div className='table-actions'>
+                      {role.deleted && (
+                        <button
+                          className='table-btn'
+                          onClick={() => {
+                            undoDeleteRole(role);
+                          }}
+                          title='Undo'>
+                          <FontAwesomeIcon icon={faUndo as IconProp} />
+                        </button>
+                      )}
+                      {!role.deleted && (
+                        <button
+                          className='table-btn'
+                          onClick={() => {
+                            deleteRole(role);
+                          }}
+                          title='Delete'>
+                          <FontAwesomeIcon icon={faTrash as IconProp} />
+                        </button>
+                      )}
+                      <button
                         onClick={() => {
-                          undoDeleteRole(role);
+                          viewRole(role);
                         }}
-                        title='Undo'
-                      />
-                    )}
-                    {!role.deleted && (
-                      <FontAwesomeIcon
-                        icon={faTrash as IconProp}
-                        className='action-icon table-icon-button'
-                        onClick={() => {
-                          deleteRole(role);
-                        }}
-                        title='Delete'
-                      />
-                    )}
-                    <FontAwesomeIcon
-                      icon={faEye as IconProp}
-                      className='action-icon table-icon-button'
-                      onClick={() => {
-                        viewRole(role);
-                      }}
-                      title='View'
-                    />
+                        title='View'
+                        className='table-btn'>
+                        <FontAwesomeIcon icon={faEye as IconProp} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

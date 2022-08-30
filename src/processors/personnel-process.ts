@@ -43,6 +43,6 @@ export async function createPersonnel(
 export async function updatePersonnel(personnel: Personnel): Promise<boolean> {
   return httpPut(`${PersonnelEnd.Update}/${personnel.id}`, personnel);
 }
-export async function deletePersonnel(id: number): Promise<boolean> {
+export async function removePersonnel(id: number): Promise<boolean> {
   return httpDelete(`${PersonnelEnd.Update}/${id}`);
 }

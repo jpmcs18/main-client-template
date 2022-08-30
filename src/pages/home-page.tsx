@@ -8,12 +8,21 @@ import {
 import LoginPage from './login-page';
 import UserPage from './user-page';
 
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import {
+  faAngleRight,
+  faBars,
+  faHome,
+  faPowerOff,
+  faTimes,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMemo, useState } from 'react';
 import { Routes } from '../routes';
+import Icon from './components/icon';
 import ManageProfile from './modals/manage-profile';
 import PersonnelPage from './personnel-page';
 import RolePage from './role-page';
-import Icon from './components/icon';
 
 export default function HomePage() {
   const [showProfile, setShowProfile] = useState(false);
@@ -21,57 +30,32 @@ export default function HomePage() {
   const profile = useUserProfile();
   const updateAuthorize = useUpdateAuthorize();
   const setMessage = useSetMessage();
+  const [showMenu, setShowMenu] = useState(false);
   const menus: {
     head: string;
     navs: { route: string | undefined; name: string | undefined }[];
   }[] = useMemo(
     () => [
-      ...(profile?.admin
-        ? [
-            // {
-            //   head: 'Transactions',
-            //   navs: [],
-            // },
-            {
-              head: 'Managements',
-              navs: [
-                {
-                  route: Routes.Personnel,
-                  name: 'Personnel',
-                },
-                {
-                  route: Routes.Role,
-                  name: 'Roles',
-                },
-              ],
-            },
-          ]
-        : [
-            {
-              head: 'Transactions',
-              navs: [
-                ...(profile?.distinctModules
-                  ?.filter((x) => x.header === 'Transaction')
-                  .map((x) => {
-                    return { route: x.route, name: x.description };
-                  }) ?? []),
-              ],
-            },
-            {
-              head: 'Managements',
-              navs: [
-                ...(profile?.distinctModules
-                  ?.filter((x) => x.header === 'Management')
-                  .map((x) => {
-                    return { route: x.route, name: x.description };
-                  }) ?? []),
-              ],
-            },
-          ]),
+      {
+        head: 'Managements',
+        navs: [
+          {
+            route: Routes.Personnel,
+            name: 'Personnel',
+          },
+          {
+            route: Routes.User,
+            name: 'Users',
+          },
+          {
+            route: Routes.Role,
+            name: 'Roles',
+          },
+        ],
+      },
     ],
     [profile?.distinctModules, profile?.admin]
   );
-
   function logoutUser() {
     setMessage({
       message: 'Continue to logout?',
@@ -87,39 +71,78 @@ export default function HomePage() {
     <>
       {authorize ? (
         <BrowserRouter>
-          <header className='navbar'>
-            <div className='menu-container'>
-              <NavLink to={Routes.Home} className='icon'>
-                <Icon />
-              </NavLink>
-              <nav>
-                <div>
-                  <ul className='navigations'>
-                    {(profile?.distinctModules?.length ?? 0) < 3 &&
-                    (profile?.distinctModules?.length ?? 0) > 0 ? (
-                      profile?.distinctModules?.map((x) => (
-                        <li key={x.id.toString()}>
-                          <NavLink to={x.route ?? ''} className='nav-menu'>
-                            {x.description ?? ''}
+          <header>
+            <nav>
+              <div className='menu-container'>
+                {!!menus?.length && (
+                  <div className='nav-menu-container'>
+                    <button
+                      className='nav-icon'
+                      onClick={() => setShowMenu(() => true)}>
+                      <FontAwesomeIcon icon={faBars as IconProp} />
+                    </button>
+                    <div className={'menus ' + (showMenu ? 'menu-show' : '')}>
+                      <div className='menu-item-container'>
+                        <div className='menu-item-header'>
+                          <NavLink
+                            onClick={() => setShowMenu(() => false)}
+                            to={Routes.Home}
+                            exact
+                            className='nav-icon home-icon'>
+                            <FontAwesomeIcon icon={faHome as IconProp} />
                           </NavLink>
-                        </li>
-                      ))
-                    ) : (
-                      <li>
-                        <button className='nav-menu'>Menus</button>
-                        <div className='menus'>
+                          <button
+                            className='nav-icon close-nav-menu'
+                            onClick={() => setShowMenu(() => false)}>
+                            <FontAwesomeIcon icon={faTimes as IconProp} />
+                          </button>
+                        </div>
+
+                        <div className='menu-container mobile-profile'>
+                          <div className='name'>
+                            <label
+                              className='nav-menu'
+                              onClick={() => {
+                                setShowProfile(true);
+                                setShowMenu(() => false);
+                              }}>
+                              {profile?.name}
+                              <FontAwesomeIcon
+                                className='name-icon'
+                                icon={faAngleRight as IconProp}
+                              />
+                            </label>
+                            <span className='name-subtitle'>
+                              {profile?.username}
+                            </span>
+                          </div>
+                          <button
+                            onClick={logoutUser}
+                            className='nav-menu logout'>
+                            Logout
+                          </button>
+                        </div>
+                        <div className='menus-container'>
                           {menus
                             .filter((x) => x.navs.length > 0)
                             .map((menu) => (
                               <div className='menu-items' key={menu.head}>
-                                <div className='head'>{menu.head}</div>
+                                {menu.head && (
+                                  <div className='head'>{menu.head}</div>
+                                )}
                                 <div className='navs'>
                                   {menu.navs.map((nav) => (
-                                    <div key={nav.route}>
+                                    <div key={nav.route} className='menu-item'>
                                       <NavLink
+                                        onClick={() => setShowMenu(() => false)}
                                         to={nav.route ?? ''}
+                                        exact
                                         className='nav-menu'>
                                         {nav.name}
+                                        <FontAwesomeIcon
+                                          className='menu-icon'
+                                          icon={faAngleRight as IconProp}
+                                        />
                                       </NavLink>
                                     </div>
                                   ))}
@@ -127,36 +150,31 @@ export default function HomePage() {
                               </div>
                             ))}
                         </div>
-                      </li>
-                    )}
-                    {(profile?.distinctModules?.filter(
-                      (x) => x.route === Routes.User
-                    )?.[0]?.id ||
-                      profile?.admin) && (
-                      <li>
-                        <NavLink to={Routes.User} className='nav-menu'>
-                          Users
-                        </NavLink>
-                      </li>
-                    )}
-                  </ul>
+                      </div>
+                      <div
+                        className='menu-content-blocker'
+                        onClick={() => setShowMenu(() => false)}></div>
+                    </div>
+                  </div>
+                )}
+                <NavLink to={Routes.Home} exact className='nav-icon'>
+                  <Icon />
+                </NavLink>
+              </div>
+              <div className='menu-container desktop-profile'>
+                <div>
+                  <label
+                    className='nav-menu'
+                    onClick={() => setShowProfile(true)}>
+                    {profile?.name}
+                  </label>
+                  <span className='name-subtitle'>{profile?.username}</span>
                 </div>
-                <ul className='user'>
-                  <li>
-                    <label
-                      className='user-name nav-menu'
-                      onClick={() => setShowProfile(true)}>
-                      {`${profile?.personnel?.fullName}`}
-                    </label>
-                  </li>
-                  <li>
-                    <label onClick={logoutUser} className='nav-menu'>
-                      Logout
-                    </label>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+                <button onClick={logoutUser} className='nav-icon'>
+                  <FontAwesomeIcon icon={faPowerOff as IconProp} />
+                </button>
+              </div>
+            </nav>
           </header>
           <Switch>
             {(profile?.distinctModules?.filter(
