@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { User } from '../../entities/user/User';
+import User from '../../entities/user/User';
 
 interface State {
   users: User[];

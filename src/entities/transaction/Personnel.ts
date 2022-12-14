@@ -1,4 +1,4 @@
-export interface Personnel {
+export default interface Personnel {
   id: number;
   firstName: string;
   middleName: string;

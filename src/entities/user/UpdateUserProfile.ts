@@ -1,6 +1,6 @@
-import { Personnel } from '../transaction/Personnel';
+import Personnel from '../transaction/Personnel';
 
-export interface UpdateUserProfile {
+export default interface UpdateUserProfile {
   username: string;
   personnel?: Personnel | undefined;
   password?: string;

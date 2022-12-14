@@ -1,7 +1,7 @@
 import { SecurityEnd } from '../endpoints';
-import { Authentication } from '../entities/Authentication';
+import Authentication from '../entities/Authentication';
 import { httpAuthenticatingPost } from './base';
-import { LoginUser } from '../entities/user/LoginUser';
+import LoginUser from '../entities/user/LoginUser';
 import { saveToken } from './session-manager';
 
 export async function authenticate(params: LoginUser): Promise<boolean> {

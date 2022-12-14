@@ -3,7 +3,7 @@ import {
   useSetBusy,
   useSetMessage,
 } from '../../custom-hooks/authorize-provider';
-import { Personnel } from '../../entities/transaction/Personnel';
+import Personnel from '../../entities/transaction/Personnel';
 import {
   createPersonnel,
   updatePersonnel,

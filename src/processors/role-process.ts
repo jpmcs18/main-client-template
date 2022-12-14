@@ -1,6 +1,6 @@
 import { RoleEnd } from '../endpoints';
-import { SearchResult } from '../entities/SearchResult';
-import { Role } from '../entities/user/Role';
+import SearchResult from '../entities/SearchResult';
+import Role from '../entities/user/Role';
 import { httpDelete, httpGet, httpPost, httpPut } from './base';
 export async function getRoles(): Promise<Role[] | undefined> {
   return httpGet<Role[]>(RoleEnd.GetList);

@@ -1,36 +1,27 @@
-import { createContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   useSetBusy,
   useSetMessage,
   useSetToasterMessage,
 } from '../custom-hooks/authorize-provider';
-import { Personnel } from '../entities/transaction/Personnel';
 import { searchPersonnels } from '../processors/personnel-process';
 import { personnelActions } from '../state/reducers/personnelReducer';
+import { RootState } from '../state/store';
 import Pagination from './components/pagination';
+import PersonnelAction from './components/personnel-components/personnel-action';
 import PersonnelItems from './components/personnel-components/personnel-items';
 import SeachBar from './components/seachbar';
 import ManagePersonnel from './modals/manage-personnel';
-type ACTIONS =
-  | { action: 'Add' }
-  | { action: 'Edit'; payload: Personnel }
-  | { action: 'Delete'; payload: number };
-export const PersonnelActions = createContext<(action: ACTIONS) => void>(
-  () => {}
-);
-
 export default function PersonnelPage() {
   const dispatch = useDispatch();
+
+  const personnelState = useSelector((state: RootState) => state.personnel);
   const [key, setKey] = useState<string | undefined>();
   const [pageCount, setPageCount] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
-  const [showModal, setShowModal] = useState(false);
-  const [selectedPersonnel, setSelectedPersonnel] = useState<
-    Personnel | undefined
-  >();
   const setToasterMessage = useSetToasterMessage();
 
   useEffect(
@@ -40,19 +31,6 @@ export default function PersonnelPage() {
     // eslint-disable-next-line
     []
   );
-
-  function personnelAction(action: ACTIONS) {
-    switch (action.action) {
-      case 'Add':
-        setShowModal(true);
-        setSelectedPersonnel(undefined);
-        break;
-      case 'Edit':
-        setShowModal(true);
-        setSelectedPersonnel(action.payload);
-        break;
-    }
-  }
 
   function searchPersonnel({
     searchKey,
@@ -86,7 +64,7 @@ export default function PersonnelPage() {
   }
 
   function onClose(needToReload: boolean) {
-    setShowModal(false);
+    dispatch(personnelActions.closeManagementModal());
     if (needToReload) {
       searchPersonnel({});
     }
@@ -97,22 +75,21 @@ export default function PersonnelPage() {
       <section>
         <SeachBar search={search} />
       </section>
-      <section>
+      <section className='table-header-control'>
+        <PersonnelAction />
         <Pagination
           pages={pageCount}
           currentPageNumber={currentPage}
           goInPage={goToPage}></Pagination>
       </section>
       <section className='table-container'>
-        <PersonnelActions.Provider value={personnelAction}>
-          <PersonnelItems />
-        </PersonnelActions.Provider>
+        <PersonnelItems />
       </section>
       <>
-        {showModal && (
+        {personnelState.showManagementModal && (
           <ManagePersonnel
             onClose={onClose}
-            selectedPersonnel={selectedPersonnel}
+            selectedPersonnel={personnelState.selectedPersonnel}
           />
         )}
       </>

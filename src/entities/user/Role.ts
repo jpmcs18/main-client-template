@@ -1,6 +1,6 @@
-import { Access } from './Access';
+import Access from './Access';
 
-export interface Role {
+export default interface Role {
   id: number;
   description: string;
   accesses: Access[];

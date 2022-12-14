@@ -1,9 +1,9 @@
 import { UserEnd } from '../endpoints';
 import { httpDelete, httpGet, httpPost, httpPut } from './base';
-import { Profile } from '../entities/user/Profile';
-import { UpdateUserProfile } from '../entities/user/UpdateUserProfile';
-import { User } from '../entities/user/User';
-import { SearchResult } from '../entities/SearchResult';
+import Profile from '../entities/user/Profile';
+import UpdateUserProfile from '../entities/user/UpdateUserProfile';
+import User from '../entities/user/User';
+import SearchResult from '../entities/SearchResult';
 
 export async function getUserData(): Promise<Profile | undefined> {
   return await httpGet<Profile>(UserEnd.GetData);

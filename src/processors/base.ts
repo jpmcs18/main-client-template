@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { Authentication } from '../entities/Authentication';
+import Authentication from '../entities/Authentication';
 import { SecurityEnd } from '../endpoints';
 import { API } from '../constant';
 import { clearToken, getToken, saveToken } from './session-manager';

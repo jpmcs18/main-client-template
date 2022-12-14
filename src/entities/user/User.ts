@@ -1,7 +1,7 @@
-import { Personnel } from '../transaction/Personnel';
-import { Role } from './Role';
+import Personnel from '../transaction/Personnel';
+import UserRole from './UserRole';
 
-export interface User {
+export default interface User {
   id: number;
   username: string;
   name: string;
@@ -10,12 +10,4 @@ export interface User {
   personnel?: Personnel | undefined;
   personnelId?: number | undefined;
   userRoles?: UserRole[] | undefined;
-}
-
-export interface UserRole {
-  id: number;
-  userId: number | undefined;
-  roleId: number;
-  role: Role;
-  deleted?: boolean | undefined;
 }

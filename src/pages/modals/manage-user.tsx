@@ -6,9 +6,10 @@ import {
   useSetBusy,
   useSetMessage,
 } from '../../custom-hooks/authorize-provider';
-import { Personnel } from '../../entities/transaction/Personnel';
-import { Role } from '../../entities/user/Role';
-import { User, UserRole } from '../../entities/user/User';
+import Personnel from '../../entities/transaction/Personnel';
+import Role from '../../entities/user/Role';
+import User from '../../entities/user/User';
+import UserRole from '../../entities/user/UserRole';
 import { getPersonnels } from '../../processors/personnel-process';
 import { getRoles } from '../../processors/role-process';
 import { createUser, updateUser } from '../../processors/user-process';

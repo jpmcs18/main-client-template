@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
-import { Module } from '../entities/user/Module';
-import { Role } from '../entities/user/Role';
+import Module from '../entities/user/Module';
+import Role from '../entities/user/Role';
 import { searchRoles } from '../processors/role-process';
 import Pagination from './components/pagination';
 import RoleItems from './components/role-components/role-items';

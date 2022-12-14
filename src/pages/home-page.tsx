@@ -1,4 +1,4 @@
-import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import {
   useAuthorize,
   useSetMessage,
@@ -15,14 +15,18 @@ import {
   faHome,
   faPowerOff,
   faTimes,
+  faUser,
+  faUserCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMemo, useState } from 'react';
-import { Routes } from '../routes';
+import { ModuleRoutes } from '../routes';
 import Icon from './components/icon';
 import ManageProfile from './modals/manage-profile';
 import PersonnelPage from './personnel-page';
 import RolePage from './role-page';
+import MenuItem from '../entities/MenuItem';
+import { getSessionMenus } from '../processors/session-manager';
 
 export default function HomePage() {
   const [showProfile, setShowProfile] = useState(false);
@@ -31,24 +35,22 @@ export default function HomePage() {
   const updateAuthorize = useUpdateAuthorize();
   const setMessage = useSetMessage();
   const [showMenu, setShowMenu] = useState(false);
-  const menus: {
-    head: string;
-    navs: { route: string | undefined; name: string | undefined }[];
-  }[] = useMemo(
+  const menus: MenuItem[] = useMemo(
     () => [
       {
-        head: 'Managements',
-        navs: [
+        isHead: true,
+        name: 'Managements',
+        menus: [
           {
-            route: Routes.Personnel,
+            route: ModuleRoutes.Personnel,
             name: 'Personnel',
           },
           {
-            route: Routes.User,
+            route: ModuleRoutes.User,
             name: 'Users',
           },
           {
-            route: Routes.Role,
+            route: ModuleRoutes.Role,
             name: 'Roles',
           },
         ],
@@ -79,15 +81,14 @@ export default function HomePage() {
                     <button
                       className='nav-icon'
                       onClick={() => setShowMenu(() => true)}>
-                      <FontAwesomeIcon icon={faBars as IconProp} />
+                      <FontAwesomeIcon size='lg' icon={faBars as IconProp} />
                     </button>
                     <div className={'menus ' + (showMenu ? 'menu-show' : '')}>
                       <div className='menu-item-container'>
                         <div className='menu-item-header'>
                           <NavLink
                             onClick={() => setShowMenu(() => false)}
-                            to={Routes.Home}
-                            exact
+                            to={ModuleRoutes.Home}
                             className='nav-icon home-icon'>
                             <FontAwesomeIcon icon={faHome as IconProp} />
                           </NavLink>
@@ -106,7 +107,7 @@ export default function HomePage() {
                                 setShowProfile(true);
                                 setShowMenu(() => false);
                               }}>
-                              {profile?.name}
+                              {profile?.personnel?.fullName}
                               <FontAwesomeIcon
                                 className='name-icon'
                                 icon={faAngleRight as IconProp}
@@ -123,32 +124,48 @@ export default function HomePage() {
                           </button>
                         </div>
                         <div className='menus-container'>
-                          {menus
-                            .filter((x) => x.navs.length > 0)
-                            .map((menu) => (
-                              <div className='menu-items' key={menu.head}>
-                                {menu.head && (
-                                  <div className='head'>{menu.head}</div>
-                                )}
-                                <div className='navs'>
-                                  {menu.navs.map((nav) => (
-                                    <div key={nav.route} className='menu-item'>
-                                      <NavLink
-                                        onClick={() => setShowMenu(() => false)}
-                                        to={nav.route ?? ''}
-                                        exact
-                                        className='nav-menu'>
-                                        {nav.name}
-                                        <FontAwesomeIcon
-                                          className='menu-icon'
-                                          icon={faAngleRight as IconProp}
-                                        />
-                                      </NavLink>
-                                    </div>
-                                  ))}
+                          {menus.map((menu) => (
+                            <div className='menu-items' key={menu.name}>
+                              {menu.isHead ? (
+                                <>
+                                  <div className='head'>{menu.name}</div>
+                                  <div className='navs'>
+                                    {menu.menus?.map((nav) => (
+                                      <div
+                                        key={nav.route}
+                                        className='menu-item'>
+                                        <NavLink
+                                          onClick={() =>
+                                            setShowMenu(() => false)
+                                          }
+                                          to={nav.route ?? ''}
+                                          className='nav-menu'>
+                                          {nav.name}
+                                          <FontAwesomeIcon
+                                            className='menu-icon'
+                                            icon={faAngleRight as IconProp}
+                                          />
+                                        </NavLink>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              ) : (
+                                <div className='menu-item main-menus'>
+                                  <NavLink
+                                    onClick={() => setShowMenu(() => false)}
+                                    to={menu.route ?? ''}
+                                    className='nav-menu'>
+                                    {menu.name}
+                                    <FontAwesomeIcon
+                                      className='menu-icon'
+                                      icon={faAngleRight as IconProp}
+                                    />
+                                  </NavLink>
                                 </div>
-                              </div>
-                            ))}
+                              )}
+                            </div>
+                          ))}
                         </div>
                       </div>
                       <div
@@ -157,45 +174,67 @@ export default function HomePage() {
                     </div>
                   </div>
                 )}
-                <NavLink to={Routes.Home} exact className='nav-icon'>
+                <NavLink to={ModuleRoutes.Home} className='nav-icon'>
                   <Icon />
                 </NavLink>
               </div>
               <div className='menu-container desktop-profile'>
-                <div>
-                  <label
-                    className='nav-menu'
-                    onClick={() => setShowProfile(true)}>
-                    {profile?.name}
-                  </label>
-                  <span className='name-subtitle'>{profile?.username}</span>
-                </div>
-                <button onClick={logoutUser} className='nav-icon'>
-                  <FontAwesomeIcon icon={faPowerOff as IconProp} />
+                <button className='nav-icon user'>
+                  <FontAwesomeIcon icon={faUserCircle} size='lg' />
                 </button>
+                <div className='floating-user-info'>
+                  <div className='infomation'>
+                    <div className='user-icon'>
+                      <FontAwesomeIcon
+                        icon={faUserCircle}
+                        size='2xl'
+                        className='nav-icon user'
+                      />
+                    </div>
+                    <div className='user-details'>
+                      <span className='name'>
+                        {profile?.personnel?.fullName}
+                      </span>
+                      <span className='name-subtitle'>{profile?.username}</span>
+                    </div>
+                  </div>
+                  <div className='controls'>
+                    <button
+                      onClick={() => setShowProfile(true)}
+                      className='btn-user-control'>
+                      Update Profile
+                    </button>
+                    <button onClick={logoutUser} className='btn-user-control'>
+                      Logout
+                    </button>
+                  </div>
+                </div>
               </div>
             </nav>
           </header>
-          <Switch>
+          <Routes>
             {(profile?.distinctModules?.filter(
-              (x) => x.route === Routes.User
+              (x) => x.route === ModuleRoutes.User
             )?.[0]?.id ||
               profile?.admin) && (
-              <Route path={Routes.User} exact component={UserPage} />
+              <Route path={ModuleRoutes.User} element={<UserPage />} />
             )}
             {(profile?.distinctModules?.filter(
-              (x) => x.route === Routes.Role
+              (x) => x.route === ModuleRoutes.Role
             )?.[0]?.id ||
               profile?.admin) && (
-              <Route path={Routes.Role} exact component={RolePage} />
+              <Route path={ModuleRoutes.Role} element={<RolePage />} />
             )}
             {(profile?.distinctModules?.filter(
-              (x) => x.route === Routes.Personnel
+              (x) => x.route === ModuleRoutes.Personnel
             )?.[0]?.id ||
               profile?.admin) && (
-              <Route path={Routes.Personnel} exact component={PersonnelPage} />
+              <Route
+                path={ModuleRoutes.Personnel}
+                element={<PersonnelPage />}
+              />
             )}
-          </Switch>
+          </Routes>
           <div>
             {showProfile && (
               <ManageProfile onClose={() => setShowProfile(false)} />

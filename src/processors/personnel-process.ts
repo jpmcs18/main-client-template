@@ -1,6 +1,6 @@
 import { PersonnelEnd } from '../endpoints';
-import { SearchResult } from '../entities/SearchResult';
-import { Personnel } from '../entities/transaction/Personnel';
+import SearchResult from '../entities/SearchResult';
+import Personnel from '../entities/transaction/Personnel';
 import { httpDelete, httpGet, httpPost, httpPut } from './base';
 
 export async function getPersonnels(): Promise<Personnel[] | undefined> {

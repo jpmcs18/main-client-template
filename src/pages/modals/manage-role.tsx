@@ -3,8 +3,8 @@ import {
   useSetBusy,
   useSetMessage,
 } from '../../custom-hooks/authorize-provider';
-import { Module } from '../../entities/user/Module';
-import { Role } from '../../entities/user/Role';
+import Module from '../../entities/user/Module';
+import Role from '../../entities/user/Role';
 import { getModules } from '../../processors/module-process';
 import { createRole, updateRole } from '../../processors/role-process';
 import CustomTextBox from '../components/custom-textbox';

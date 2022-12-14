@@ -1,4 +1,4 @@
-export interface Module {
+export default interface Module {
   id: number;
   description: string | undefined;
   route: string | undefined;

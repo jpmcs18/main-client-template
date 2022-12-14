@@ -1,31 +1,21 @@
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useContext } from 'react';
-import { Personnel } from '../../../entities/transaction/Personnel';
-import { PersonnelActions } from '../../personnel-page';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import Personnel from '../../../entities/transaction/Personnel';
+import { personnelActions } from '../../../state/reducers/personnelReducer';
+import { RootState } from '../../../state/store';
 
 export default function PersonnelItem({ personnel }: { personnel: Personnel }) {
-  const action = useContext(PersonnelActions);
+  const dispatch = useDispatch();
+  const selectedPersonnel = useSelector(
+    (state: RootState) => state.personnel.selectedPersonnel
+  );
   return (
-    <tr>
+    <tr
+      className={selectedPersonnel?.id === personnel.id ? 'selected' : ''}
+      onClick={() => dispatch(personnelActions.select(personnel))}>
       <td>{personnel.firstName}</td>
       <td>{personnel.middleName}</td>
       <td>{personnel.lastName}</td>
-      <td>
-        <div className='table-actions'>
-          <button
-            className='table-btn'
-            onClick={() => action({ action: 'Edit', payload: personnel })}>
-            <FontAwesomeIcon icon={faEdit as IconProp} />
-          </button>
-          <button
-            className='table-btn'
-            onClick={() => action({ action: 'Delete', payload: personnel.id })}>
-            <FontAwesomeIcon icon={faTrash as IconProp} />
-          </button>
-        </div>
-      </td>
     </tr>
   );
 }

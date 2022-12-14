@@ -1,11 +1,12 @@
-import { Profile } from '../entities/user/Profile';
-import { Authentication } from '../entities/Authentication';
+import Profile from '../entities/user/Profile';
+import Authentication from '../entities/Authentication';
 import { APP_SECRET } from '../constant';
+import MenuItem from '../entities/MenuItem';
 
 var CryptoJS = require('crypto-js');
 const token_add = '--pxx--';
 const profile_add = '--pxx-xdx--';
-const current_voter = '--pxx-xvx--';
+const navigation_add = '--pxx-xnx--';
 const theme = '--dark-theme--';
 
 function encrypt(data: string): string {
@@ -60,24 +61,22 @@ export function clearProfile() {
   sessionStorage.removeItem(profile_add);
 }
 
-export function getCurrentVoter(): number | undefined {
+export function getSessionMenus(): MenuItem[] | undefined {
   try {
-    return parseInt(decrypt(sessionStorage.getItem(current_voter) ?? ''));
+    return JSON.parse(decrypt(localStorage.getItem(navigation_add) ?? ''));
   } catch {
     return undefined;
   }
 }
-
-export function saveCurrentVoter(voterId: number) {
-  if (voterId !== undefined) {
-    sessionStorage.setItem(current_voter, encrypt(voterId.toString()));
+export function saveSessionMenus(menus: MenuItem[]) {
+  if (menus !== undefined) {
+    localStorage.setItem(navigation_add, encrypt(JSON.stringify(menus)));
   }
 }
 
-export function clearVoterId() {
-  sessionStorage.removeItem(current_voter);
+export function clearSessionMenus() {
+  localStorage.removeItem(navigation_add);
 }
-
 export function clearSession() {
   sessionStorage.clear();
 }

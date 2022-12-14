@@ -5,7 +5,7 @@ import {
   useUpdateAuthorize,
   useUpdateUserProfile,
 } from '../custom-hooks/authorize-provider';
-import { LoginUser } from '../entities/user/LoginUser';
+import LoginUser from '../entities/user/LoginUser';
 import { authenticate } from '../processors/security-process';
 import { saveProfile } from '../processors/session-manager';
 import { getUserData } from '../processors/user-process';
@@ -94,7 +94,6 @@ export default function LoginPage() {
           <button onClick={signIn} className='btn'>
             Login
           </button>
-          <label className='forgot-password'>Forgot Password</label>
         </div>
       </div>
     </section>

@@ -9,7 +9,7 @@ import {
   useSetMessage,
   useSetToasterMessage,
 } from '../custom-hooks/authorize-provider';
-import { User } from '../entities/user/User';
+import User from '../entities/user/User';
 import {
   activateUsers,
   deleteUser,

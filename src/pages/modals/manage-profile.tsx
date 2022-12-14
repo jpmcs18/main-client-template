@@ -5,7 +5,7 @@ import {
   useUpdateUserProfile,
   useUserProfile,
 } from '../../custom-hooks/authorize-provider';
-import { UpdateUserProfile } from '../../entities/user/UpdateUserProfile';
+import UpdateUserProfile from '../../entities/user/UpdateUserProfile';
 import {
   getTheme,
   saveProfile,

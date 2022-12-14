@@ -1,7 +1,7 @@
 import { Guid } from 'guid-typescript';
 import React, { useContext, ReactNode, useState } from 'react';
-import { ToasterMessage, ToasterMessageItem } from '../entities/ToasterMessage';
-import { Profile } from '../entities/user/Profile';
+import ToasterMessage, { ToasterMessageItem } from '../entities/ToasterMessage';
+import Profile from '../entities/user/Profile';
 import Toaster from '../pages/components/toaster';
 import MessageDialog from '../pages/modals/message-dialog';
 import {

@@ -1,5 +1,5 @@
 import { Guid } from 'guid-typescript';
-export interface ToasterMessage {
+export default interface ToasterMessage {
   id: Guid;
   title?: string;
   content: string;

@@ -1,8 +1,8 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useContext } from 'react';
-import { Role } from '../../../entities/user/Role';
+import { useContext } from 'react';
+import Role from '../../../entities/user/Role';
 import { RoleActions } from '../../role-page';
 
 export default function RoleItem({ role }: { role: Role }) {

@@ -1,6 +1,6 @@
-import { Module } from './Module';
+import Module from './Module';
 
-export interface Access {
+export default interface Access {
   id: number;
   roleId: number;
   moduleId: number;

@@ -1,24 +1,14 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
-  faAsterisk,
   faEdit,
   faKey,
-  faPowerOff,
-  faRecycle,
-  faRedo,
-  faRedoAlt,
   faTrash,
-  faUndo,
   faUndoAlt,
-  faUserAltSlash,
   faUserCheck,
-  faUserLock,
-  faUserSecret,
-  faUserShield,
   faUserSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { User } from '../../../entities/user/User';
+import User from '../../../entities/user/User';
 import { USERACTIONS } from '../../user-page';
 
 export default function UserItem({

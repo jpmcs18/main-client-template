@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Module } from '../../../entities/user/Module';
+import Module from '../../../entities/user/Module';
 import { RoleManagementActions } from '../../modals/manage-role';
 import CustomCheckBox from '../custom-check-box';
 
